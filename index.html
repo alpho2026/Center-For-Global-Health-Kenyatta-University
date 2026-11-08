@@ -449,7 +449,6 @@
           </div>
         </div>
 
-        <!-- Collaboration form -->
         <div class="lg:col-span-5 bg-white/5 rounded-xl p-6 sm:p-8 border border-white/15">
           <p class="text-xs font-bold uppercase tracking-widest text-kuAmber-gold mb-2">
             Collaboration
@@ -458,21 +457,35 @@
             Register Interest in Collaboration
           </h3>
           <p class="text-sm text-white/75 leading-relaxed mb-5">
-            Tell us about your organization, share your contact details, and let us
-            know where you would like to work with the Center.
+            Use the form below to tell us about your organization, share your contact
+            details, and select the areas where you would like to collaborate.
           </p>
           <a
             id="collaboration-link"
             href="https://docs.google.com/forms/d/e/1FAIpQLSd_kbpFPyICaHTl3uoxJYADtP8eG5T0DhmjX3rDb7yFaMuVOQ/viewform"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Open Collaboration Form (opens in a new tab)"
             class="inline-flex items-center gap-2 rounded-lg bg-kuAmber-gold px-5 py-3 text-sm font-semibold text-kuGreen hover:bg-kuAmber-light transition"
           >
-            Open Collaboration Form
+            Open Form in a New Tab
           </a>
         </div>
       </div>
+
+      <!-- Embedded Google Form -->
+      <section class="mt-10 rounded-xl bg-white p-2 text-kuGreen sm:p-6" aria-labelledby="collaboration-form-title">
+        <h2 id="collaboration-form-title" class="px-3 pt-3 font-serif text-2xl font-medium sm:px-0 sm:pt-0">
+          Collaboration Interest Form
+        </h2>
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSd_kbpFPyICaHTl3uoxJYADtP8eG5T0DhmjX3rDb7yFaMuVOQ/viewform?embedded=true"
+          title="Kenyatta University Center for Global Health Collaboration Interest Form"
+          width="100%"
+          height="1350"
+          loading="lazy"
+          class="mt-3 block w-full border-0 bg-white"
+        ></iframe>
+      </section>
 
       <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/65">
         <div class="flex items-center gap-2.5">
