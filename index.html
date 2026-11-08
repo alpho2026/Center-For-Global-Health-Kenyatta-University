@@ -1,203 +1,696 @@
-<!-- Center for Global Health chatbot -->
-<style>
-  #cgh-chat {
-    position: fixed;
-    right: max(1rem, env(safe-area-inset-right));
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    z-index: 100;
-    width: min(23rem, calc(100vw - 2rem));
-    color: #113e35;
-  }
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Center for Global Health | Kenyatta University</title>
 
-  #cgh-chat summary {
-    width: fit-content;
-    margin-left: auto;
-    padding: .8rem 1.1rem;
-    border-radius: 999px;
-    background: #113e35;
-    color: #fff;
-    font-weight: 700;
-    box-shadow: 0 4px 18px #0b292344;
-    cursor: pointer;
-    list-style: none;
-  }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  #cgh-chat summary::-webkit-details-marker { display: none; }
-  #cgh-chat summary::after { content: " +"; }
-  #cgh-chat[open] summary::after { content: " −"; }
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            kuGreen: {
+              DEFAULT: '#113E35',
+              card: '#11382F',
+              dark: '#0B2923',
+              light: '#1A574B',
+              muted: '#4A635D',
+              tint: '#F2F6F5'
+            },
+            kuAmber: {
+              DEFAULT: '#D67418',
+              gold: '#E5B869',
+              light: '#FEF3C7',
+              hover: '#B85D0C'
+            },
+            stoneBg: '#FAF9F6'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Newsreader"', 'Georgia', 'serif']
+          }
+        }
+      }
+    };
+  </script>
 
-  #cgh-chat-panel {
-    display: flex;
-    flex-direction: column;
-    gap: .7rem;
-    max-height: min(32rem, 70vh);
-    max-height: min(32rem, 70dvh);
-    margin-top: .5rem;
-    padding: .9rem;
-    overflow: auto;
-    border: 1px solid #cbd9d4;
-    border-radius: 1rem;
-    background: #fff;
-    box-shadow: 0 8px 28px #0b292333;
-  }
+  <style>
+    body {
+      background-color: #FAF9F6;
+      color: #1F2937;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  #cgh-chat-panel h2 { margin: 0; font-weight: 800; }
-  #cgh-chat-panel p { margin: 0; }
+    .bg-dot-grid {
+      background-image: radial-gradient(rgba(17, 62, 53, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
 
-  #cgh-chat-suggestions, #cgh-chat-form, #cgh-chat-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .4rem;
-  }
+    @keyframes pulseGlow {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.25;
+      }
+      50% {
+        transform: scale(1.18);
+        opacity: 0.4;
+      }
+    }
 
-  #cgh-chat button {
-    border: 1px solid #cbd9d4;
-    border-radius: .55rem;
-    padding: .4rem .6rem;
-    background: #f2f6f5;
-    color: #113e35;
-    cursor: pointer;
-  }
+    .kenya-pulse {
+      transform-origin: 70px 68px;
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
 
-  #cgh-chat-log {
-    min-height: 5rem;
-    max-height: 13rem;
-    overflow: auto;
-    overflow-wrap: anywhere;
-    border-radius: .55rem;
-    padding: .65rem;
-    background: #f2f6f5;
-    font-size: .9rem;
-  }
+    #cgh-chat {
+      position: fixed;
+      right: max(1rem, env(safe-area-inset-right));
+      bottom: max(1rem, env(safe-area-inset-bottom));
+      z-index: 100;
+      width: min(23rem, calc(100vw - 2rem));
+      color: #113e35;
+    }
 
-  #cgh-chat-log p + p { margin-top: .55rem; }
+    #cgh-chat summary {
+      width: fit-content;
+      margin-left: auto;
+      padding: .8rem 1.1rem;
+      border-radius: 999px;
+      background: #113e35;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 18px #0b292344;
+      cursor: pointer;
+      list-style: none;
+    }
 
-  #cgh-chat-input {
-    flex: 1 1 9rem;
-    min-width: 0;
-    padding: .45rem .6rem;
-    border: 1px solid #a4bab2;
-    border-radius: .55rem;
-    background: #fff;
-    color: #113e35;
-    font-size: 1rem;
-  }
+    #cgh-chat summary::-webkit-details-marker { display: none; }
+    #cgh-chat summary::after { content: " +"; }
+    #cgh-chat[open] summary::after { content: " −"; }
 
-  #cgh-chat-form button { background: #113e35; color: #fff; }
-  #cgh-chat-links { column-gap: .85rem; font-size: .85rem; }
-  #cgh-chat-links a { text-decoration: underline; }
-  #cgh-chat :focus-visible { outline: 2px solid #a86215; outline-offset: 2px; }
-</style>
+    #cgh-chat-panel {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      max-height: min(32rem, 70vh);
+      max-height: min(32rem, 70dvh);
+      margin-top: .5rem;
+      padding: .9rem;
+      overflow: auto;
+      border: 1px solid #cbd9d4;
+      border-radius: 1rem;
+      background: #fff;
+      box-shadow: 0 8px 28px #0b292333;
+    }
 
-<details id="cgh-chat">
-  <summary>Chat with the Center</summary>
+    #cgh-chat-panel h2 { margin: 0; font-weight: 800; }
+    #cgh-chat-panel p { margin: 0; }
 
-  <section id="cgh-chat-panel" aria-labelledby="cgh-chat-title">
-    <h2 id="cgh-chat-title">Center for Global Health</h2>
+    #cgh-chat-suggestions, #cgh-chat-form, #cgh-chat-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
 
-    <div id="cgh-chat-suggestions" aria-label="Suggested questions">
-      <button type="button">What do you do?</button>
-      <button type="button">Where are you based?</button>
-      <button type="button">Current projects</button>
-      <button type="button">How can we collaborate?</button>
+    #cgh-chat button {
+      border: 1px solid #cbd9d4;
+      border-radius: .55rem;
+      padding: .4rem .6rem;
+      background: #f2f6f5;
+      color: #113e35;
+      cursor: pointer;
+    }
+
+    #cgh-chat-log {
+      min-height: 5rem;
+      max-height: 13rem;
+      overflow: auto;
+      overflow-wrap: anywhere;
+      border-radius: .55rem;
+      padding: .65rem;
+      background: #f2f6f5;
+      font-size: .9rem;
+    }
+
+    #cgh-chat-log p + p { margin-top: .55rem; }
+
+    #cgh-chat-input {
+      flex: 1 1 9rem;
+      min-width: 0;
+      padding: .45rem .6rem;
+      border: 1px solid #a4bab2;
+      border-radius: .55rem;
+      background: #fff;
+      color: #113e35;
+      font-size: 1rem;
+    }
+
+    #cgh-chat-form button { background: #113e35; color: #fff; }
+    #cgh-chat-links { column-gap: .85rem; font-size: .85rem; }
+    #cgh-chat-links a { text-decoration: underline; }
+    #cgh-chat :focus-visible { outline: 2px solid #a86215; outline-offset: 2px; }
+  </style>
+</head>
+
+<body class="font-sans selection:bg-kuGreen selection:text-white">
+  <!-- Header logo artwork -->
+  <svg class="hidden" aria-hidden="true">
+    <defs>
+      <g id="ku-globe-graphic">
+        <circle cx="60" cy="60" r="54" stroke="#CBD5E1" stroke-width="0.5" opacity="0.7" />
+        <circle cx="60" cy="60" r="46" stroke="#94A3B8" stroke-width="0.75" stroke-dasharray="2 3" />
+        <ellipse cx="60" cy="60" rx="46" ry="22" transform="rotate(-24 60 60)" stroke="#94A3B8" stroke-width="0.75" stroke-dasharray="2 2.5" />
+        <ellipse cx="60" cy="60" rx="24" ry="46" transform="rotate(15 60 60)" stroke="#94A3B8" stroke-width="0.75" stroke-dasharray="2 2.5" />
+
+        <g stroke="#94A3B8" stroke-width="0.65" opacity="0.75">
+          <line x1="25" y1="42" x2="42" y2="30" />
+          <line x1="42" y1="30" x2="65" y2="26" />
+          <line x1="65" y1="26" x2="88" y2="38" />
+          <line x1="42" y1="30" x2="52" y2="48" />
+          <line x1="52" y1="48" x2="72" y2="54" />
+          <line x1="72" y1="54" x2="68" y2="76" />
+          <line x1="52" y1="48" x2="48" y2="70" />
+          <line x1="48" y1="70" x2="68" y2="76" />
+          <line x1="68" y1="76" x2="62" y2="92" />
+          <line x1="25" y1="42" x2="32" y2="66" />
+          <line x1="32" y1="66" x2="48" y2="70" />
+          <line x1="88" y1="38" x2="94" y2="62" />
+          <line x1="72" y1="54" x2="94" y2="62" />
+        </g>
+
+        <g fill="#64748B" opacity="0.85">
+          <circle cx="44" cy="44" r="1.15" /><circle cx="48" cy="42" r="1.15" /><circle cx="53" cy="42" r="1.15" /><circle cx="58" cy="43" r="1.15" />
+          <circle cx="40" cy="48" r="1.15" /><circle cx="45" cy="48" r="1.25" /><circle cx="50" cy="47" r="1.25" /><circle cx="55" cy="47" r="1.25" /><circle cx="60" cy="48" r="1.15" /><circle cx="65" cy="49" r="1.15" />
+          <circle cx="38" cy="53" r="1.15" /><circle cx="43" cy="53" r="1.25" /><circle cx="48" cy="52" r="1.35" /><circle cx="53" cy="52" r="1.35" /><circle cx="58" cy="52" r="1.25" /><circle cx="63" cy="53" r="1.25" /><circle cx="68" cy="54" r="1.15" />
+          <circle cx="42" cy="58" r="1.15" /><circle cx="47" cy="58" r="1.25" /><circle cx="52" cy="57" r="1.35" /><circle cx="57" cy="57" r="1.35" /><circle cx="62" cy="58" r="1.35" /><circle cx="67" cy="58" r="1.25" /><circle cx="72" cy="58" r="1.25" /><circle cx="76" cy="57" r="1.15" />
+          <circle cx="52" cy="62" r="1.25" /><circle cx="57" cy="62" r="1.35" /><circle cx="62" cy="63" r="1.35" /><circle cx="67" cy="63" r="1.35" /><circle cx="72" cy="63" r="1.25" /><circle cx="75" cy="62" r="1.15" />
+          <circle cx="54" cy="67" r="1.25" /><circle cx="59" cy="67" r="1.35" /><circle cx="64" cy="68" r="1.35" /><circle cx="69" cy="68" r="1.35" /><circle cx="73" cy="67" r="1.25" />
+          <circle cx="56" cy="72" r="1.25" /><circle cx="61" cy="73" r="1.35" /><circle cx="66" cy="73" r="1.35" /><circle cx="70" cy="73" r="1.25" />
+          <circle cx="58" cy="78" r="1.25" /><circle cx="63" cy="78" r="1.35" /><circle cx="67" cy="78" r="1.25" />
+          <circle cx="60" cy="83" r="1.25" /><circle cx="64" cy="83" r="1.25" /><circle cx="68" cy="82" r="1.15" />
+          <circle cx="61" cy="88" r="1.15" /><circle cx="65" cy="87" r="1.15" />
+          <circle cx="63" cy="92" r="1.05" />
+          <circle cx="54" cy="34" r="1.05" /><circle cx="59" cy="33" r="1.05" /><circle cx="64" cy="35" r="1.05" /><circle cx="70" cy="38" r="1.15" /><circle cx="75" cy="42" r="1.15" /><circle cx="78" cy="46" r="1.15" />
+        </g>
+
+        <circle cx="25" cy="42" r="2.1" fill="#64748B" />
+        <circle cx="42" cy="30" r="2.3" fill="#64748B" />
+        <circle cx="65" cy="26" r="2.1" fill="#64748B" />
+        <circle cx="88" cy="38" r="2.1" fill="#64748B" />
+        <circle cx="32" cy="66" r="2.1" fill="#64748B" />
+        <circle cx="48" cy="70" r="2.3" fill="#475569" />
+        <circle cx="94" cy="62" r="1.9" fill="#94A3B8" />
+        <circle cx="70" cy="68" r="7.5" fill="#D67418" fill-opacity="0.24" class="kenya-pulse" />
+        <circle cx="70" cy="68" r="4.6" fill="#D67418" />
+      </g>
+    </defs>
+  </svg>
+
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <a href="#" class="flex items-center gap-3.5 group focus:outline-none">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 flex items-center justify-center">
+          <svg viewBox="0 0 120 120" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Center for Global Health Globe Icon">
+            <use href="#ku-globe-graphic" />
+          </svg>
+        </div>
+        <div class="leading-none tracking-tight">
+          <div class="text-kuGreen font-extrabold text-sm sm:text-base md:text-lg tracking-tight uppercase">
+            CENTER FOR<br />GLOBAL HEALTH
+          </div>
+          <div class="text-kuGreen font-bold text-[9px] sm:text-[10px] tracking-[0.22em] uppercase mt-1">
+            KENYATTA UNIVERSITY
+          </div>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600">
+        <a href="#about" class="hover:text-kuGreen transition-colors">About</a>
+        <a href="#areas" class="hover:text-kuGreen transition-colors">Research &amp; Capacity</a>
+        <a href="#projects" class="hover:text-kuGreen transition-colors">Projects</a>
+        <a href="#contact" class="hover:text-kuGreen transition-colors">Contact &amp; Collaborate</a>
+      </nav>
+
+      <div class="flex md:hidden items-center">
+        <a href="#contact" class="inline-flex items-center text-xs font-semibold px-3.5 py-2 rounded-lg border border-stone-200 text-kuGreen hover:bg-stone-50 transition">
+          Contact
+        </a>
+      </div>
     </div>
+  </header>
 
-    <div id="cgh-chat-log" role="log" aria-label="Chat messages" aria-live="polite" tabindex="0">
-      <p>Hi! Ask me about the Center, our location, projects, or ways to collaborate.</p>
+  <main>
+    <!-- Hero -->
+    <section class="relative bg-white bg-dot-grid border-b border-stone-200/80 overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+        <div class="max-w-4xl">
+          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-kuGreen-tint border border-kuGreen/15 mb-6">
+            <span class="w-2 h-2 rounded-full bg-kuAmber"></span>
+            <span class="text-xs font-semibold uppercase tracking-widest text-kuGreen">
+              Kenyatta University • Nairobi, Kenya
+            </span>
+          </div>
+
+          <h1 class="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] text-kuGreen font-medium tracking-tight leading-[1.12] mb-6">
+            Advancing equitable health through research, innovation, and capacity building.
+          </h1>
+
+          <p class="text-base sm:text-lg text-stone-600 leading-relaxed mb-10">
+            The Center for Global Health at Kenyatta University brings together multidisciplinary researchers, clinicians, and community stakeholders to address priority health challenges across Kenya and the region.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3.5">
+            <a href="#projects" class="inline-flex items-center gap-2 bg-kuGreen hover:bg-kuGreen-dark text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition shadow-sm">
+              <span>Current Projects</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+            <a href="#areas" class="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-kuGreen border border-stone-300 text-sm font-semibold px-5 py-3.5 rounded-lg transition">
+              <span>Our Core Areas</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About the Center -->
+    <section id="about" class="py-16 sm:py-24 bg-stoneBg border-b border-stone-200/80">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          <div class="lg:col-span-4">
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-kuAmber mb-2">
+              <span>01</span>
+              <span class="w-6 h-px bg-kuAmber"></span>
+              <span>About the Center</span>
+            </div>
+            <h2 class="font-serif text-3xl sm:text-4xl text-kuGreen font-medium leading-tight">
+              Who We Are
+            </h2>
+          </div>
+
+          <div class="lg:col-span-8 space-y-6">
+            <p class="text-lg sm:text-xl text-stone-800 leading-relaxed font-normal">
+              Based at Kenyatta University, the Center for Global Health is a hub for collaborative health research, practical clinical innovation, and workforce training.
+            </p>
+            <p class="text-base text-stone-600 leading-relaxed">
+              We work closely with healthcare providers, policymakers, communities, and global partners to generate locally relevant evidence, responsibly deploy emerging health technologies, and strengthen health systems to improve maternal, newborn, child, and community health outcomes.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-stone-200">
+              <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-kuGreen mb-2">Our Focus</h3>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                  Addressing high-priority public health and clinical needs in low-resource settings.
+                </p>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-kuGreen mb-2">Our Approach</h3>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                  Stakeholder-driven collaboration connecting academic rigor with frontline healthcare delivery.
+                </p>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-kuGreen mb-2">Our Commitment</h3>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                  Ethical, equitable, and sustainable health solutions tailored for local and regional impact.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core pillars -->
+    <section id="areas" class="py-16 sm:py-24 bg-white border-b border-stone-200/80">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-12 sm:mb-16">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-kuAmber mb-2">
+            <span>02</span>
+            <span class="w-6 h-px bg-kuAmber"></span>
+            <span>Core Pillars</span>
+          </div>
+          <h2 class="font-serif text-3xl sm:text-4xl text-kuGreen font-medium leading-tight mb-4">
+            Research, Innovation, Training &amp; Capacity Building
+          </h2>
+          <p class="text-base text-stone-600 leading-relaxed">
+            Our work bridges priority health research, point-of-care innovation, and frontline clinical capacity building.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          <div class="bg-stoneBg rounded-xl p-7 sm:p-8 border border-stone-200/90 flex flex-col justify-between hover:border-kuGreen/40 transition">
+            <div>
+              <div class="w-11 h-11 rounded-lg bg-kuGreen text-white flex items-center justify-center mb-6">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-widest text-kuAmber">Pillar I</span>
+              <h3 class="font-serif text-2xl text-kuGreen font-medium mt-1 mb-3">Areas of Research</h3>
+              <p class="text-sm text-stone-600 leading-relaxed mb-6">
+                Conducting multidisciplinary clinical, epidemiological, and implementation research across four priority areas:
+              </p>
+            </div>
+            <ul class="space-y-3 pt-4 border-t border-stone-200/80 text-sm text-stone-800 font-medium">
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Noncommunicable diseases</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Maternal, newborn and child health</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Infectious diseases</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Artificial intelligence and digital health</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-stoneBg rounded-xl p-7 sm:p-8 border border-stone-200/90 flex flex-col justify-between hover:border-kuGreen/40 transition">
+            <div>
+              <div class="w-11 h-11 rounded-lg bg-kuGreen text-white flex items-center justify-center mb-6">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-widest text-kuAmber">Pillar II</span>
+              <h3 class="font-serif text-2xl text-kuGreen font-medium mt-1 mb-3">Innovation</h3>
+              <p class="text-sm text-stone-600 leading-relaxed mb-6">
+                Evaluating, adapting, and scaling accessible medical technologies and AI-assisted diagnostic tools designed to support clinical decision-making at the point of care.
+              </p>
+            </div>
+            <ul class="space-y-3 pt-4 border-t border-stone-200/80 text-sm text-stone-800 font-medium">
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Point-of-care ultrasound (POCUS)</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>AI-assisted screening &amp; diagnostics</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Context-appropriate digital health solutions</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-stoneBg rounded-xl p-7 sm:p-8 border border-stone-200/90 flex flex-col justify-between hover:border-kuGreen/40 transition">
+            <div>
+              <div class="w-11 h-11 rounded-lg bg-kuGreen text-white flex items-center justify-center mb-6">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-widest text-kuAmber">Pillar III</span>
+              <h3 class="font-serif text-2xl text-kuGreen font-medium mt-1 mb-3">Training &amp; Capacity Building</h3>
+              <p class="text-sm text-stone-600 leading-relaxed mb-6">
+                Developing structured training modules, hands-on clinical workshops, and mentorship programs that equip healthcare workers and researchers with practical skills.
+              </p>
+            </div>
+            <ul class="space-y-3 pt-4 border-t border-stone-200/80 text-sm text-stone-800 font-medium">
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Ultrasound training &amp; diagnostic capacity</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Clinical &amp; research mentorship</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-kuAmber mt-2 flex-shrink-0"></span>
+                <span>Health workforce strengthening</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Current projects -->
+    <section id="projects" class="py-16 sm:py-24 bg-[#F7F9F8] border-b border-stone-200/80">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mb-10">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-kuAmber mb-2">
+            <span>03</span>
+            <span class="w-6 h-px bg-kuAmber"></span>
+            <span>Portfolio</span>
+          </div>
+          <h2 class="font-serif text-3xl sm:text-4xl text-kuGreen font-medium leading-tight">
+            Current Projects
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <article class="bg-white rounded-[8px] border border-[#E2E8F0] p-8 sm:p-9 flex flex-col justify-between transition duration-200 hover:shadow-md hover:border-kuGreen/40">
+            <div>
+              <div class="text-[13px] font-bold uppercase tracking-[0.08em] text-kuGreen-card mb-6">
+                MATERNAL AND NEWBORN HEALTH
+              </div>
+              <h3 class="text-[25px] font-bold text-kuGreen-card leading-[1.28] mb-4">
+                Point-of-care ultrasound
+              </h3>
+              <p class="text-[17px] text-kuGreen-muted leading-[1.6] font-normal">
+                Kenyatta University’s MedMissions initiative strengthens ultrasound training and diagnostic capacity in low-resource settings.
+              </p>
+            </div>
+          </article>
+
+          <article class="bg-white rounded-[8px] border border-[#E2E8F0] p-8 sm:p-9 flex flex-col justify-between transition duration-200 hover:shadow-md hover:border-kuGreen/40">
+            <div>
+              <div class="text-[13px] font-bold uppercase tracking-[0.08em] text-kuGreen-card mb-6">
+                AI AND DIGITAL HEALTH
+              </div>
+              <h3 class="text-[25px] font-bold text-kuGreen-card leading-[1.28] mb-4">
+                AI-assisted obstetric ultrasound
+              </h3>
+              <p class="text-[17px] text-kuGreen-muted leading-[1.6] font-normal">
+                A Nairobi study on AI-enabled ultrasound for screening and early diagnosis of pre-eclampsia.
+              </p>
+            </div>
+          </article>
+
+          <article class="bg-white rounded-[8px] border border-[#E2E8F0] p-8 sm:p-9 flex flex-col justify-between transition duration-200 hover:shadow-md hover:border-kuGreen/40">
+            <div>
+              <div class="text-[13px] font-bold uppercase tracking-[0.08em] text-kuGreen-card mb-6">
+                INFECTIOUS DISEASES
+              </div>
+              <h3 class="text-[25px] font-bold text-kuGreen-card leading-[1.28] mb-4">
+                Trauma counselling for youth living with HIV
+              </h3>
+              <p class="text-[17px] text-kuGreen-muted leading-[1.6] font-normal">
+                A BRIGHT Grant pilot of a brief psychological intervention in Kiambu County, Kenya.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Contact and collaboration -->
+  <footer id="contact" class="bg-kuGreen text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-14 border-b border-white/15 items-start">
+        <div class="lg:col-span-7 space-y-6">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-kuAmber-gold mb-2">
+              <span>04</span>
+              <span class="w-6 h-px bg-kuAmber-gold"></span>
+              <span>Contact &amp; Collaborate</span>
+            </div>
+            <h2 class="font-serif text-3xl sm:text-4xl text-white font-medium leading-tight mb-3">
+              Partner With the Center
+            </h2>
+            <p class="text-sm sm:text-base text-white/80 max-w-xl leading-relaxed">
+              We welcome collaborations with academic institutions, clinical partners, counties, policymakers, and global health organizations in research, innovation, and training.
+            </p>
+          </div>
+
+          <div class="pt-2 flex flex-wrap items-center gap-4">
+            <a href="mailto:centerforglobalhealth@ku.ac.ke" class="inline-flex items-center gap-2.5 bg-white text-kuGreen hover:bg-stone-100 text-sm font-semibold px-5 py-3 rounded-lg transition shadow-xs">
+              <svg class="w-4 h-4 text-kuAmber" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span>centerforglobalhealth@ku.ac.ke</span>
+            </a>
+
+            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-sm font-semibold px-5 py-3 rounded-lg transition">
+              <svg class="w-4 h-4 fill-current text-kuAmber-gold" viewBox="0 0 24 24">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68 1.68 1.68 0 0 0-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+              </svg>
+              <span>Connect on LinkedIn</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white/5 rounded-xl p-6 sm:p-8 border border-white/15">
+          <p class="text-xs font-bold uppercase tracking-widest text-kuAmber-gold mb-2">
+            Collaboration
+          </p>
+          <h3 class="font-serif text-2xl text-white font-medium mb-2.5">
+            Register Interest in Collaboration
+          </h3>
+          <p class="text-sm text-white/75 leading-relaxed mb-5">
+            Use the form to tell us about your organization, share your contact
+            details, and select the areas where you would like to collaborate.
+          </p>
+          <a
+            id="collaboration-link"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSd_kbpFPyICaHTl3uoxJYADtP8eG5T0DhmjX3rDb7yFaMuVOQ/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-lg bg-kuAmber-gold px-5 py-3 text-sm font-semibold text-kuGreen hover:bg-kuAmber-light transition"
+          >
+            Open Form in a New Tab
+          </a>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/65">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2 h-2 rounded-full bg-kuAmber inline-block"></span>
+          <span class="font-semibold text-white/90 uppercase tracking-wider">
+            Center for Global Health • Kenyatta University
+          </span>
+        </div>
+        <p>© Center for Global Health, Kenyatta University • Nairobi, Kenya</p>
+      </div>
     </div>
+  </footer>
 
-    <form id="cgh-chat-form">
-      <input id="cgh-chat-input" type="text" aria-label="Your question"
-             placeholder="Type a question" autocomplete="off" maxlength="300" required />
-      <button type="submit">Send</button>
-    </form>
+  <!-- Center chatbot -->
+  <details id="cgh-chat">
+    <summary>Chat with the Center</summary>
 
-    <div id="cgh-chat-links">
-      <a href="#contact">Contact the Center</a>
-      <a id="cgh-chat-collaborate" target="_blank" rel="noopener noreferrer">Collaboration form</a>
-    </div>
-  </section>
-</details>
+    <section id="cgh-chat-panel" aria-labelledby="cgh-chat-title">
+      <h2 id="cgh-chat-title">Center for Global Health</h2>
 
-<script>
-  (() => {
-    const widget = document.getElementById('cgh-chat');
-    const log = document.getElementById('cgh-chat-log');
-    const input = document.getElementById('cgh-chat-input');
-    const formLink = document.getElementById('collaboration-link');
-    const chatLink = document.getElementById('cgh-chat-collaborate');
+      <div id="cgh-chat-suggestions" aria-label="Suggested questions">
+        <button type="button">What do you do?</button>
+        <button type="button">Where are you based?</button>
+        <button type="button">Current projects</button>
+        <button type="button">How can we collaborate?</button>
+      </div>
 
-    if (formLink) chatLink.href = formLink.href;
-    else chatLink.hidden = true;
+      <div id="cgh-chat-log" role="log" aria-label="Chat messages" aria-live="polite" tabindex="0">
+        <p>Hi! Ask me about the Center, our location, projects, or ways to collaborate.</p>
+      </div>
 
-    const projects = [...document.querySelectorAll('#projects article')].map(card => ({
-      title: card.querySelector('h3')?.textContent.trim(),
-      description: card.querySelector('p')?.textContent.trim().replace(/\s+/g, ' ')
-    })).filter(project => project.title && project.description);
+      <form id="cgh-chat-form">
+        <input
+          id="cgh-chat-input"
+          type="text"
+          aria-label="Your question"
+          placeholder="Type a question"
+          autocomplete="off"
+          maxlength="300"
+          required
+        />
+        <button type="submit">Send</button>
+      </form>
 
-    const projectAnswer = project => project.title + ': ' + project.description;
+      <div id="cgh-chat-links">
+        <a href="#contact">Contact the Center</a>
+        <a id="cgh-chat-collaborate" target="_blank" rel="noopener noreferrer">Collaboration form</a>
+      </div>
+    </section>
+  </details>
 
-    const topics = [
-      [/\b(pre[ -]?eclampsia|ai[ -]assisted obstetric|ai[ -]enabled ultrasound)\b/, /ai-assisted obstetric/i],
-      [/\b(bright|hiv|trauma|counsell?ing)\b/, /trauma/i],
-      [/\b(medmissions|point[ -]of[ -]care ultrasound|pocus)\b/, /^point-of-care/i]
-    ];
+  <script>
+    (() => {
+      const widget = document.getElementById('cgh-chat');
+      const log = document.getElementById('cgh-chat-log');
+      const input = document.getElementById('cgh-chat-input');
+      const formLink = document.getElementById('collaboration-link');
+      const chatLink = document.getElementById('cgh-chat-collaborate');
 
-    const answers = [
-      [/\b(location|locations|where|located|based|address|campus|visit|nairobi)\b/,
-        'The Center is based at Kenyatta University in Nairobi, Kenya. For directions or a visit, email centerforglobalhealth@ku.ac.ke.'],
-      [/\b(collaborat\w*|partner\w*|funding|joint|register|sign up|form)\b/,
-        'We welcome collaboration in research, POCUS and clinical innovation, AI and digital health, training and capacity building, and funding and institutional partnerships. Use the Collaboration form link to tell us about your organization and interests.'],
-      [/\b(contact|email|phone|telephone|call|reach|whatsapp)\b/,
-        'Email the Center at centerforglobalhealth@ku.ac.ke. For partnership inquiries, you can also use the Collaboration form.'],
-      [/\b(projects?|portfolio|initiatives?|current|programmes?|programs?)\b/,
-        () => projects.length ? projects.map(projectAnswer).join(' ') : 'See the Current Projects section for updates.'],
-      [/\b(what.*do|about|who|mission|services|focus|research|training|innovation|capacity|work|digital health|areas|center|centre)\b/,
-        'The Center brings together researchers, clinicians, policymakers and communities. It works across health research, clinical and digital innovation, and training and mentorship. Research priorities include noncommunicable diseases, maternal and child health, infectious diseases, and AI and digital health.']
-    ];
+      if (formLink) chatLink.href = formLink.href;
+      else chatLink.hidden = true;
 
-    function respond(question) {
-      const query = question.toLowerCase();
-      const matches = answers.filter(([pattern]) => pattern.test(query));
-      const specific = topics.filter(([pattern]) => pattern.test(query))
-        .map(([, title]) => projects.find(project => title.test(project.title)))
-        .filter(Boolean);
-      const replies = specific.map(projectAnswer);
+      const projects = [...document.querySelectorAll('#projects article')].map(card => ({
+        title: card.querySelector('h3')?.textContent.trim(),
+        description: card.querySelector('p')?.textContent.trim().replace(/\s+/g, ' ')
+      })).filter(project => project.title && project.description);
 
-      for (const [, reply] of matches) {
-        if (typeof reply === 'function' && specific.length) continue;
-        replies.push(typeof reply === 'function' ? reply() : reply);
+      const projectAnswer = project => project.title + ': ' + project.description;
+
+      const topics = [
+        [/\b(pre[ -]?eclampsia|ai[ -]assisted obstetric|ai[ -]enabled ultrasound)\b/, /ai-assisted obstetric/i],
+        [/\b(bright|hiv|trauma|counsell?ing)\b/, /trauma/i],
+        [/\b(medmissions|point[ -]of[ -]care ultrasound|pocus)\b/, /^point-of-care/i]
+      ];
+
+      const answers = [
+        [/\b(location|locations|where|located|based|address|campus|visit|nairobi)\b/,
+          'The Center is based at Kenyatta University in Nairobi, Kenya. For directions or a visit, email centerforglobalhealth@ku.ac.ke.'],
+        [/\b(collaborat\w*|partner\w*|funding|joint|register|sign up|form)\b/,
+          'We welcome collaboration in research, POCUS and clinical innovation, AI and digital health, training and capacity building, and funding and institutional partnerships. Use the Collaboration form link to tell us about your organization and interests.'],
+        [/\b(contact|email|phone|telephone|call|reach|whatsapp)\b/,
+          'Email the Center at centerforglobalhealth@ku.ac.ke. For partnership inquiries, you can also use the Collaboration form.'],
+        [/\b(projects?|portfolio|initiatives?|current|programmes?|programs?)\b/,
+          () => projects.length ? projects.map(projectAnswer).join(' ') : 'See the Current Projects section for updates.'],
+        [/\b(what.*do|about|who|mission|services|focus|research|training|innovation|capacity|work|digital health|areas|center|centre)\b/,
+          'The Center brings together researchers, clinicians, policymakers and communities. It works across health research, clinical and digital innovation, and training and mentorship. Research priorities include noncommunicable diseases, maternal and child health, infectious diseases, and AI and digital health.']
+      ];
+
+      function respond(question) {
+        const query = question.toLowerCase();
+        const matches = answers.filter(([pattern]) => pattern.test(query));
+        const specific = topics.filter(([pattern]) => pattern.test(query))
+          .map(([, title]) => projects.find(project => title.test(project.title)))
+          .filter(Boolean);
+        const replies = specific.map(projectAnswer);
+
+        for (const [, reply] of matches) {
+          if (typeof reply === 'function' && specific.length) continue;
+          replies.push(typeof reply === 'function' ? reply() : reply);
+        }
+
+        return replies.length ? replies.slice(0, 3).join('\n\n')
+          : 'I can answer questions about the Center, its location, current projects, or collaboration. For anything else, email centerforglobalhealth@ku.ac.ke.';
       }
 
-      return replies.length ? replies.slice(0, 3).join('\n\n')
-        : 'I can answer questions about the Center, its location, current projects, or collaboration. For anything else, email centerforglobalhealth@ku.ac.ke.';
-    }
+      function addMessage(label, message) {
+        const line = document.createElement('p');
+        const speaker = document.createElement('strong');
+        speaker.textContent = label + ': ';
+        line.style.whiteSpace = 'pre-line';
+        line.append(speaker, document.createTextNode(message));
+        log.append(line);
+        log.scrollTop = log.scrollHeight;
+      }
 
-    function addMessage(label, message) {
-      const line = document.createElement('p');
-      const speaker = document.createElement('strong');
-      speaker.textContent = label + ': ';
-      line.style.whiteSpace = 'pre-line';
-      line.append(speaker, document.createTextNode(message));
-      log.append(line);
-      log.scrollTop = log.scrollHeight;
-    }
+      function ask(question) {
+        const value = question.trim();
+        if (!value) return;
+        addMessage('You', value);
+        addMessage('Center', respond(value));
+      }
 
-    function ask(question) {
-      const value = question.trim();
-      if (!value) return;
-      addMessage('You', value);
-      addMessage('Center', respond(value));
-    }
+      widget.querySelectorAll('#cgh-chat-suggestions button').forEach(button => {
+        button.addEventListener('click', () => ask(button.textContent));
+      });
 
-    widget.querySelectorAll('#cgh-chat-suggestions button').forEach(button => {
-      button.addEventListener('click', () => ask(button.textContent));
-    });
-
-    document.getElementById('cgh-chat-form').addEventListener('submit', event => {
-      event.preventDefault();
-      ask(input.value);
-      input.value = '';
-    });
-  })();
-</script>
+      document.getElementById('cgh-chat-form').addEventListener('submit', event => {
+        event.preventDefault();
+        ask(input.value);
+        input.value = '';
+      });
+    })();
+  </script>
+</body>
+</html>
