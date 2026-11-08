@@ -185,7 +185,7 @@
               </svg>
             </a>
             <a href="#areas" class="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-kuGreen border border-stone-300 text-sm font-semibold px-5 py-3.5 rounded-lg transition">
-              Our Core Areas
+              <span>Our Core Areas</span>
             </a>
           </div>
         </div>
@@ -413,7 +413,7 @@
     </section>
   </main>
 
-  <!-- Contact and newsletter -->
+  <!-- Contact and collaboration -->
   <footer id="contact" class="bg-kuGreen text-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-14 border-b border-white/15 items-start">
@@ -449,31 +449,28 @@
           </div>
         </div>
 
+        <!-- Collaboration form -->
         <div class="lg:col-span-5 bg-white/5 rounded-xl p-6 sm:p-8 border border-white/15">
-          <div class="text-xs font-bold uppercase tracking-widest text-kuAmber-gold mb-2">Newsletter</div>
-          <h3 class="font-serif text-2xl text-white font-medium mb-2.5">Sign Up for Updates</h3>
-          <p class="text-sm text-white/75 leading-relaxed mb-5">
-            Receive periodic updates on our research, point-of-care innovation pilots, and training workshops.
+          <p class="text-xs font-bold uppercase tracking-widest text-kuAmber-gold mb-2">
+            Collaboration
           </p>
-
-          <form onsubmit="handleNewsletterSubmit(event)">
-            <div class="flex flex-col sm:flex-row gap-2.5">
-              <label for="newsletterEmail" class="sr-only">Email address</label>
-              <input
-                id="newsletterEmail"
-                type="email"
-                required
-                placeholder="Enter your email address"
-                class="flex-1 bg-white text-sm text-stone-800 px-4 py-3 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-kuAmber"
-              />
-              <button type="submit" class="bg-kuAmber hover:bg-kuAmber-hover text-white text-sm font-semibold px-5 py-3 rounded-lg transition whitespace-nowrap">
-                Sign Up
-              </button>
-            </div>
-            <p id="newsletterFeedback" class="hidden text-xs font-medium text-kuAmber-gold mt-3">
-              Thank you for subscribing to the Center for Global Health newsletter.
-            </p>
-          </form>
+          <h3 class="font-serif text-2xl text-white font-medium mb-2.5">
+            Register Interest in Collaboration
+          </h3>
+          <p class="text-sm text-white/75 leading-relaxed mb-5">
+            Tell us about your organization, share your contact details, and let us
+            know where you would like to work with the Center.
+          </p>
+          <a
+            id="collaboration-link"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSd_kbpFPyICaHTl3uoxJYADtP8eG5T0DhmjX3rDb7yFaMuVOQ/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Collaboration Form (opens in a new tab)"
+            class="inline-flex items-center gap-2 rounded-lg bg-kuAmber-gold px-5 py-3 text-sm font-semibold text-kuGreen hover:bg-kuAmber-light transition"
+          >
+            Open Collaboration Form
+          </a>
         </div>
       </div>
 
@@ -488,18 +485,5 @@
       </div>
     </div>
   </footer>
-
-  <script>
-    function handleNewsletterSubmit(event) {
-      event.preventDefault();
-      const emailInput = document.getElementById('newsletterEmail');
-      const feedback = document.getElementById('newsletterFeedback');
-
-      if (emailInput && emailInput.value) {
-        feedback.classList.remove('hidden');
-        emailInput.value = '';
-      }
-    }
-  </script>
 </body>
 </html>
