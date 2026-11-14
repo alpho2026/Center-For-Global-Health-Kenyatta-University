@@ -47,6 +47,14 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Custom background image with semi-transparent overlay for text contrast */
+    .bg-crumpled-world {
+      background-image: linear-gradient(rgba(250, 249, 246, 0.88), rgba(250, 249, 246, 0.88)), url('https://raw.githubusercontent.com/alpho2026/Center-For-Global-Health-Kenyatta-University/main/Background%20pic_Center.png');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
     .bg-dot-grid {
       background-image: radial-gradient(rgba(17, 62, 53, 0.08) 1px, transparent 1px);
       background-size: 24px 24px;
@@ -247,21 +255,14 @@
 
   <main>
     <!-- Hero -->
-    <section class="relative bg-white bg-dot-grid border-b border-stone-200/80 overflow-hidden">
+    <section class="relative bg-crumpled-world border-b border-stone-200/80 overflow-hidden">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
         <div class="max-w-4xl">
-          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-kuGreen-tint border border-kuGreen/15 mb-6">
-            <span class="w-2 h-2 rounded-full bg-kuAmber"></span>
-            <span class="text-xs font-semibold uppercase tracking-widest text-kuGreen">
-              Kenyatta University • Nairobi, Kenya
-            </span>
-          </div>
-
-          <h1 class="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] text-kuGreen font-medium tracking-tight leading-[1.12] mb-6">
+          <h1 class="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] text-kuGreen font-medium tracking-tight leading-[1.12] mb-6 drop-shadow-sm">
             Advancing equitable health through research, innovation, and capacity building.
           </h1>
 
-          <p class="text-base sm:text-lg text-stone-600 leading-relaxed mb-10">
+          <p class="text-base sm:text-lg text-stone-700 leading-relaxed mb-10 font-normal">
             The Center for Global Health at Kenyatta University brings together multidisciplinary researchers, clinicians, and community stakeholders to address priority health challenges across Kenya and the region.
           </p>
 
@@ -272,7 +273,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </a>
-            <a href="#areas" class="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-kuGreen border border-stone-300 text-sm font-semibold px-5 py-3.5 rounded-lg transition">
+            <a href="#areas" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white text-kuGreen border border-stone-300 text-sm font-semibold px-5 py-3.5 rounded-lg transition shadow-xs">
               <span>Our Core Areas</span>
             </a>
           </div>
