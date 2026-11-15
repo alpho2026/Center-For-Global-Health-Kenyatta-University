@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://vdk-viber-runtime-prod.bot.botpress.host/edge/webchat.css" />
 
   <script>
     tailwind.config = {
@@ -76,6 +75,94 @@
       transform-origin: 70px 68px;
       animation: pulseGlow 3.5s ease-in-out infinite;
     }
+
+    #cgh-chat {
+      position: fixed;
+      right: max(1rem, env(safe-area-inset-right));
+      bottom: max(1rem, env(safe-area-inset-bottom));
+      z-index: 100;
+      width: min(23rem, calc(100vw - 2rem));
+      color: #113e35;
+    }
+
+    #cgh-chat summary {
+      width: fit-content;
+      margin-left: auto;
+      padding: .8rem 1.1rem;
+      border-radius: 999px;
+      background: #113e35;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 18px #0b292344;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    #cgh-chat summary::-webkit-details-marker { display: none; }
+    #cgh-chat summary::after { content: " +"; }
+    #cgh-chat[open] summary::after { content: " −"; }
+
+    #cgh-chat-panel {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      max-height: min(32rem, 70vh);
+      max-height: min(32rem, 70dvh);
+      margin-top: .5rem;
+      padding: .9rem;
+      overflow: auto;
+      border: 1px solid #cbd9d4;
+      border-radius: 1rem;
+      background: #fff;
+      box-shadow: 0 8px 28px #0b292333;
+    }
+
+    #cgh-chat-panel h2 { margin: 0; font-weight: 800; }
+    #cgh-chat-panel p { margin: 0; }
+
+    #cgh-chat-suggestions, #cgh-chat-form, #cgh-chat-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+
+    #cgh-chat button {
+      border: 1px solid #cbd9d4;
+      border-radius: .55rem;
+      padding: .4rem .6rem;
+      background: #f2f6f5;
+      color: #113e35;
+      cursor: pointer;
+    }
+
+    #cgh-chat-log {
+      min-height: 5rem;
+      max-height: 13rem;
+      overflow: auto;
+      overflow-wrap: anywhere;
+      border-radius: .55rem;
+      padding: .65rem;
+      background: #f2f6f5;
+      font-size: .9rem;
+    }
+
+    #cgh-chat-log p + p { margin-top: .55rem; }
+
+    #cgh-chat-input {
+      flex: 1 1 9rem;
+      min-width: 0;
+      padding: .45rem .6rem;
+      border: 1px solid #a4bab2;
+      border-radius: .55rem;
+      background: #fff;
+      color: #113e35;
+      font-size: 1rem;
+    }
+
+    #cgh-chat-form button { background: #113e35; color: #fff; }
+    #cgh-chat-links { column-gap: .85rem; font-size: .85rem; }
+    #cgh-chat-links a { text-decoration: underline; }
+    #cgh-chat :focus-visible { outline: 2px solid #a86215; outline-offset: 2px; }
   </style>
 </head>
 
@@ -486,19 +573,125 @@
     </div>
   </footer>
 
-  <!-- Botpress Webchat Integration -->
-  <script src="https://vdk-viber-runtime-prod.bot.botpress.host/edge/webchat.js"></script>
+  <!-- Center chatbot -->
+  <details id="cgh-chat">
+    <summary>Chat with the Center</summary>
+
+    <section id="cgh-chat-panel" aria-labelledby="cgh-chat-title">
+      <h2 id="cgh-chat-title">Center for Global Health</h2>
+
+      <div id="cgh-chat-suggestions" aria-label="Suggested questions">
+        <button type="button">What do you do?</button>
+        <button type="button">Where are you based?</button>
+        <button type="button">Current projects</button>
+        <button type="button">How can we collaborate?</button>
+      </div>
+
+      <div id="cgh-chat-log" role="log" aria-label="Chat messages" aria-live="polite" tabindex="0">
+        <p>Hi! Ask me about the Center, our location, projects, or ways to collaborate.</p>
+      </div>
+
+      <form id="cgh-chat-form">
+        <input
+          id="cgh-chat-input"
+          type="text"
+          aria-label="Your question"
+          placeholder="Type a question"
+          autocomplete="off"
+          maxlength="300"
+          required
+        />
+        <button type="submit">Send</button>
+      </form>
+
+      <div id="cgh-chat-links">
+        <a href="#contact">Contact the Center</a>
+        <a id="cgh-chat-collaborate" target="_blank" rel="noopener noreferrer">Collaboration form</a>
+      </div>
+    </section>
+  </details>
+
   <script>
-    fetch("https://vdk-viber-runtime-prod.bot.botpress.host/edge/bots/e2eae77c-1d23-47e8-b4a0-67baf8328ecd/config")
-      .then((res) => res.json())
-      .then(({ webchat }) =>
-        VdkEdgeWebchat.mount({
-          ...webchat,
-          mode: "bubble",
-          baseUrl: "https://vdk-viber-runtime-prod.bot.botpress.host",
-          botId: "e2eae77c-1d23-47e8-b4a0-67baf8328ecd"
-        })
-      );
+    (() => {
+      const widget = document.getElementById('cgh-chat');
+      const log = document.getElementById('cgh-chat-log');
+      const input = document.getElementById('cgh-chat-input');
+      const formLink = document.getElementById('collaboration-link');
+      const chatLink = document.getElementById('cgh-chat-collaborate');
+
+      if (formLink) chatLink.href = formLink.href;
+      else chatLink.hidden = true;
+
+      const projects = [...document.querySelectorAll('#projects article')].map(card => ({
+        title: card.querySelector('h3')?.textContent.trim(),
+        description: card.querySelector('p')?.textContent.trim().replace(/\s+/g, ' ')
+      })).filter(project => project.title && project.description);
+
+      const projectAnswer = project => project.title + ': ' + project.description;
+
+      const topics = [
+        [/\b(pre[ -]?eclampsia|ai[ -]assisted obstetric|ai[ -]enabled ultrasound)\b/, /ai-assisted obstetric/i],
+        [/\b(bright|hiv|trauma|counsell?ing)\b/, /trauma/i],
+        [/\b(medmissions|point[ -]of[ -]care ultrasound|pocus)\b/, /^point-of-care/i]
+      ];
+
+      const answers = [
+        [/\b(location|locations|where|located|based|address|campus|visit|nairobi)\b/,
+          'The Center is based at Kenyatta University in Nairobi, Kenya. For directions or a visit, email centerforglobalhealth@ku.ac.ke.'],
+        [/\b(collaborat\w*|partner\w*|funding|joint|register|sign up|form)\b/,
+          'We welcome collaboration in research, POCUS and clinical innovation, AI and digital health, training and capacity building, and funding and institutional partnerships. Use the Collaboration form link to tell us about your organization and interests.'],
+        [/\b(contact|email|phone|telephone|call|reach|whatsapp)\b/,
+          'Email the Center at centerforglobalhealth@ku.ac.ke. For partnership inquiries, you can also use the Collaboration form.'],
+        [/\b(projects?|portfolio|initiatives?|current|programmes?|programs?)\b/,
+          () => projects.length ? projects.map(projectAnswer).join(' ') : 'See the Current Projects section for updates.'],
+        [/\b(what.*do|about|who|mission|services|focus|research|training|innovation|capacity|work|digital health|areas|center|centre)\b/,
+          'The Center brings together researchers, clinicians, policymakers and communities. It works across health research, clinical and digital innovation, and training and mentorship. Research priorities include noncommunicable diseases, maternal and child health, infectious diseases, and AI and digital health.']
+      ];
+
+      function respond(question) {
+        const query = question.toLowerCase();
+        const matches = answers.filter(([pattern]) => pattern.test(query));
+        const specific = topics.filter(([pattern]) => pattern.test(query))
+          .map(([, title]) => projects.find(project => title.test(project.title)))
+          .filter(Boolean);
+        const replies = specific.map(projectAnswer);
+
+        for (const [, reply] of matches) {
+          if (typeof reply === 'function' && specific.length) continue;
+          replies.push(typeof reply === 'function' ? reply() : reply);
+        }
+
+        return replies.length ? replies.slice(0, 3).join('\n\n')
+          : 'I can answer questions about the Center, its location, current projects, or collaboration. For anything else, email centerforglobalhealth@ku.ac.ke.';
+      }
+
+      function addMessage(label, message) {
+        const line = document.createElement('p');
+        const speaker = document.createElement('strong');
+        speaker.textContent = label + ': ';
+        line.style.whiteSpace = 'pre-line';
+        line.append(speaker, document.createTextNode(message));
+        log.append(line);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      function ask(question) {
+        const value = question.trim();
+        if (!value) return;
+        addMessage('You', value);
+        addMessage('Center', respond(value));
+      }
+
+      widget.querySelectorAll('#cgh-chat-suggestions button').forEach(button => {
+        button.addEventListener('click', () => ask(button.textContent));
+      });
+
+      document.getElementById('cgh-chat-form').addEventListener('submit', event => {
+        event.preventDefault();
+        ask(input.value);
+        input.value = '';
+      });
+    })();
   </script>
 </body>
 </html>
