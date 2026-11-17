@@ -75,6 +75,18 @@
       transform-origin: 70px 68px;
       animation: pulseGlow 3.5s ease-in-out infinite;
     }
+
+    /* Custom Scrollbar for Chat Messages */
+    #cgh-chat-messages::-webkit-scrollbar {
+      width: 5px;
+    }
+    #cgh-chat-messages::-webkit-scrollbar-track {
+      background: #FAF9F6;
+    }
+    #cgh-chat-messages::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
   </style>
 </head>
 
@@ -484,5 +496,436 @@
       </div>
     </div>
   </footer>
+
+  <!-- Custom Native Center for Global Health Assistant Widget -->
+  <div id="cgh-chatbot" class="fixed bottom-5 right-5 z-50 font-sans">
+    <!-- Chat Window -->
+    <div
+      id="cgh-chat-panel"
+      class="hidden w-[345px] sm:w-[385px] h-[520px] bg-white rounded-2xl shadow-2xl border border-stone-200 flex-col overflow-hidden mb-3 transition-all duration-200"
+    >
+      <!-- Header -->
+      <div class="bg-kuGreen text-white px-4 py-3.5 flex items-center justify-between border-b border-white/10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-kuAmber/40">
+            <span class="w-2.5 h-2.5 rounded-full bg-kuAmber animate-pulse"></span>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-white leading-none">CGH-KU Assistant</h4>
+            <p class="text-[11px] text-kuAmber-gold mt-0.5">Kenyatta University • Concept &amp; Portfolio Guide</p>
+          </div>
+        </div>
+        <button
+          id="cgh-chat-close"
+          type="button"
+          aria-label="Close chat"
+          class="text-white/75 hover:text-white p-1 rounded-lg hover:bg-white/10 transition"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Messages Feed -->
+      <div id="cgh-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-stoneBg text-xs sm:text-[13px]"></div>
+
+      <!-- Quick Action Starter Chips -->
+      <div class="px-3 py-2 bg-white border-t border-stone-200/80 flex flex-wrap gap-1.5">
+        <button type="button" data-topic="leadership" class="cgh-chip text-[11px] font-semibold px-2.5 py-1 rounded-full bg-kuGreen-tint text-kuGreen hover:bg-kuGreen hover:text-white transition">
+          Leadership
+        </button>
+        <button type="button" data-topic="pillars" class="cgh-chip text-[11px] font-semibold px-2.5 py-1 rounded-full bg-kuGreen-tint text-kuGreen hover:bg-kuGreen hover:text-white transition">
+          Core Pillars
+        </button>
+        <button type="button" data-topic="projects" class="cgh-chip text-[11px] font-semibold px-2.5 py-1 rounded-full bg-kuGreen-tint text-kuGreen hover:bg-kuGreen hover:text-white transition">
+          Projects
+        </button>
+        <button type="button" data-topic="training" class="cgh-chip text-[11px] font-semibold px-2.5 py-1 rounded-full bg-kuGreen-tint text-kuGreen hover:bg-kuGreen hover:text-white transition">
+          Training Tracks
+        </button>
+        <button type="button" data-topic="stats" class="cgh-chip text-[11px] font-semibold px-2.5 py-1 rounded-full bg-kuGreen-tint text-kuGreen hover:bg-kuGreen hover:text-white transition">
+          Why CGH-KU?
+        </button>
+        <button type="button" data-topic="collaborate" class="cgh-chip text-[11px] font-semibold px-2.5 py-1 rounded-full bg-kuAmber-light text-kuAmber-hover hover:bg-kuAmber hover:text-white transition">
+          Collaborate / Form
+        </button>
+      </div>
+
+      <!-- Input Box -->
+      <form id="cgh-chat-form" class="p-2.5 bg-white border-t border-stone-200 flex items-center gap-2">
+        <input
+          id="cgh-chat-input"
+          type="text"
+          placeholder="Ask about Co-Directors, POCUS, KUTRRH, roadmap..."
+          autocomplete="off"
+          class="flex-1 text-xs sm:text-[13px] px-3 py-2 rounded-lg border border-stone-300 focus:outline-none focus:border-kuGreen text-stone-800"
+        />
+        <button
+          type="submit"
+          aria-label="Send message"
+          class="bg-kuGreen hover:bg-kuGreen-dark text-white p-2 rounded-lg transition flex-shrink-0"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Floating Toggle Button -->
+    <button
+      id="cgh-chat-toggle"
+      type="button"
+      aria-label="Open Center for Global Health Chat"
+      class="ml-auto flex items-center gap-2.5 bg-kuGreen hover:bg-kuGreen-dark text-white px-4 py-3 rounded-full shadow-lg border border-white/15 transition transform hover:scale-[1.02]"
+    >
+      <span class="w-2 h-2 rounded-full bg-kuAmber animate-ping"></span>
+      <svg class="w-5 h-5 text-kuAmber-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+      <span class="text-xs font-bold tracking-wide pr-0.5">Ask CGH-KU</span>
+    </button>
+  </div>
+
+  <!-- Comprehensive CGH-KU Knowledge Base & Chatbot Logic -->
+  <script>
+    (function () {
+      const panel = document.getElementById('cgh-chat-panel');
+      const toggleBtn = document.getElementById('cgh-chat-toggle');
+      const closeBtn = document.getElementById('cgh-chat-close');
+      const messagesEl = document.getElementById('cgh-chat-messages');
+      const form = document.getElementById('cgh-chat-form');
+      const input = document.getElementById('cgh-chat-input');
+      const chips = document.querySelectorAll('.cgh-chip');
+
+      const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd_kbpFPyICaHTl3uoxJYADtP8eG5T0DhmjX3rDb7yFaMuVOQ/viewform';
+      const CENTER_EMAIL = 'centerforglobalhealth@ku.ac.ke';
+
+      // Interactive Collaboration Form State
+      let collabStep = 0; // 0 = inactive, 1 = name, 2 = org & partner type, 3 = interest area
+      let collabData = { name: '', org: '', area: '' };
+
+      function appendMessage(sender, htmlContent) {
+        const wrapper = document.createElement('div');
+        wrapper.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
+
+        const bubble = document.createElement('div');
+        if (sender === 'user') {
+          bubble.className = 'max-w-[82%] bg-kuGreen text-white px-3.5 py-2.5 rounded-2xl rounded-br-xs leading-relaxed shadow-xs';
+          bubble.textContent = htmlContent;
+        } else {
+          bubble.className = 'max-w-[90%] bg-white text-stone-800 border border-stone-200/90 px-3.5 py-2.5 rounded-2xl rounded-bl-xs leading-relaxed shadow-xs space-y-1.5';
+          bubble.innerHTML = htmlContent;
+        }
+
+        wrapper.appendChild(bubble);
+        messagesEl.appendChild(wrapper);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      function startCollabIntake() {
+        collabStep = 1;
+        collabData = { name: '', org: '', area: '' };
+        appendMessage(
+          'bot',
+          `<p class="font-bold text-kuGreen">Partner &amp; Collaborate with CGH-KU</p>
+           <p>Our partnership pathway moves from: <em>Expression of Interest → Exploratory Meeting with the Co-Directors → Joint Concept Note → MoU / Agreement → Joint Project Launch</em>.</p>
+           <p class="pt-1"><a href="${GOOGLE_FORM_URL}" target="_blank" rel="noopener noreferrer" class="inline-block bg-kuAmber text-white font-semibold px-3 py-1.5 rounded-md text-[11px] hover:bg-kuAmber-hover transition">Open Official Google Form ↗</a></p>
+           <p class="pt-1 text-stone-600">Or I can prepare your inquiry right here! First: <strong>What is your full name?</strong> (Type "cancel" anytime to exit)</p>`
+        );
+      }
+
+      function handleCollabStep(userText) {
+        if (userText.toLowerCase() === 'cancel') {
+          collabStep = 0;
+          appendMessage('bot', 'Collaboration intake cancelled. Feel free to ask about our Co-Directors, projects, training tracks, or 2026–2031 roadmap!');
+          return;
+        }
+
+        if (collabStep === 1) {
+          collabData.name = userText;
+          collabStep = 2;
+          appendMessage(
+            'bot',
+            `Thank you, <strong>${collabData.name}</strong>. What <strong>organization, university, hospital, county, or agency</strong> are you with?`
+          );
+          return;
+        }
+
+        if (collabStep === 2) {
+          collabData.org = userText;
+          collabStep = 3;
+          appendMessage(
+            'bot',
+            `Great (<strong>${collabData.org}</strong>). Which area would you like to collaborate in?<br/>
+             <span class="text-stone-600">• <strong>Research:</strong> NCDs, MNCH, Infectious Diseases, or AI &amp; Digital Health<br/>• <strong>Innovation:</strong> POCUS, AI-assisted diagnostics, or device evaluation<br/>• <strong>Training:</strong> POCUS workshops, research mentorship, or county workforce strengthening</span>`
+          );
+          return;
+        }
+
+        if (collabStep === 3) {
+          collabData.area = userText;
+          collabStep = 0;
+          const subject = encodeURIComponent(`CGH-KU Collaboration Inquiry: ${collabData.org} (${collabData.name})`);
+          const body = encodeURIComponent(
+            `Dear Co-Directors Dr. Titus Kahiga and Alphonce Oyugi,\n` +
+            `Center for Global Health, Kenyatta University\n\n` +
+            `Name: ${collabData.name}\n` +
+            `Organization: ${collabData.org}\n` +
+            `Proposed Collaboration Area: ${collabData.area}\n\n` +
+            `We would like to request an exploratory meeting to discuss potential collaboration.`
+          );
+
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Collaboration Summary Ready!</p>
+             <p class="text-xs text-stone-600"><strong>Name:</strong> ${collabData.name}<br/><strong>Organization:</strong> ${collabData.org}<br/><strong>Focus:</strong> ${collabData.area}</p>
+             <div class="pt-2 flex flex-wrap gap-1.5">
+               <a href="${GOOGLE_FORM_URL}" target="_blank" rel="noopener noreferrer" class="inline-block bg-kuAmber text-white font-semibold px-3 py-1.5 rounded-md text-[11px] hover:bg-kuAmber-hover transition">Submit via Google Form ↗</a>
+               <a href="mailto:${CENTER_EMAIL}?subject=${subject}&body=${body}" class="inline-block bg-kuGreen text-white font-semibold px-3 py-1.5 rounded-md text-[11px] hover:bg-kuGreen-dark transition">Email Co-Directors ✉</a>
+             </div>`
+          );
+        }
+      }
+
+      function getBotResponse(rawInput) {
+        const q = rawInput.toLowerCase();
+
+        // Active Collaboration Intake Flow
+        if (collabStep > 0) {
+          handleCollabStep(rawInput);
+          return;
+        }
+
+        // 1. Collaboration / Form / Partnering
+        if (q.includes('form') || q.includes('collaborat') || q.includes('partner') || q.includes('register') || q.includes('join') || q.includes('engage')) {
+          startCollabIntake();
+          return;
+        }
+
+        // 2. Leadership, Co-Directors & Governance
+        if (q.includes('leader') || q.includes('director') || q.includes('kahiga') || q.includes('titus') || q.includes('alphonce') || q.includes('oyugi') || q.includes('govern') || q.includes('board') || q.includes('who leads') || q.includes('team')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Leadership &amp; Governance</p>
+             <p>CGH-KU operates a co-directorship model combining academic/clinical depth with programme development and partnerships:</p>
+             <p><strong>• Dr. Titus Kahiga, PhD (Co-Director):</strong> Faculty member and Chair in Kenyatta University's Department of Pharmacology &amp; Clinical Pharmacy. Leads scientific direction, research quality, academic integration with KU schools &amp; KUTRRH, ethics oversight, and faculty/postgraduate mentorship.</p>
+             <p><strong>• Alphonce Oyugi (Co-Director):</strong> Co-leads strategy, programme development, partnerships, resource mobilisation, operations, and digital presence across the POCUS, AI-ultrasound, and youth mental health portfolios.</p>
+             <p><strong>Governance Structure (Proposed):</strong> Supported by a 5–7 member Advisory Board, a Scientific &amp; Ethics Committee, 4 Thematic Leads, a Secretariat, and a Community Advisory Group.</p>`
+          );
+          return;
+        }
+
+        // 3. Institutional Context: Kenyatta University & KUTRRH
+        if (q.includes('kutrrh') || q.includes('hospital') || q.includes('campus') || q.includes('kahawa') || q.includes('institution') || q.includes('university')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Institutional Context: KU &amp; KUTRRH</p>
+             <p><strong>Kenyatta University (KU):</strong> Located in Kahawa, Nairobi, KU is one of Kenya's largest public universities, training doctors, nurses, pharmacists, and public health professionals.</p>
+             <p><strong>KUTRRH Anchor:</strong> The Center leverages the <strong>Kenyatta University Teaching, Referral and Research Hospital (KUTRRH)</strong>—a 650-bed national referral hospital on a 100-acre site on the Nairobi Northern Bypass (opened Oct 2019)—providing clinical research sites, referral pathways, and specialist mentors.</p>`
+          );
+          return;
+        }
+
+        // 4. Background, Rationale & Kenya Health Statistics ("Why CGH-KU?")
+        if (q.includes('stat') || q.includes('rationale') || q.includes('why') || q.includes('mortality') || q.includes('burden') || q.includes('problem') || q.includes('kdhs') || q.includes('death')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Background &amp; Rationale (Kenya Health Data)</p>
+             <p>CGH-KU addresses Kenya's double burden of communicable and noncommunicable conditions:</p>
+             <p><strong>• Maternal &amp; Newborn Mortality:</strong> Maternal mortality is ~<strong>355 per 100,000 live births</strong> (~5,000 deaths/year, KDHS 2022) vs. Kenya's 2028 target of ≤140 and the SDG target of &lt;70. Neonatal mortality is ~<strong>21 per 1,000</strong>.</p>
+             <p><strong>• Diagnostic Bottleneck:</strong> Fewer than <strong>5% of pregnant women</strong> in low-resource Kenyan settings are estimated to receive an obstetric ultrasound.</p>
+             <p><strong>• Rising NCDs:</strong> Accounted for <strong>61.7% of recorded hospital deaths</strong> in 2024 (KNBS Vital Statistics Report, up from 52.4%) and ~39% of all deaths.</p>
+             <p><strong>• HIV in Youth:</strong> ~1.3M Kenyans live with HIV (~3% prevalence). Of 19,991 new infections in 2024, <strong>32% occurred in youth aged 10–24</strong>, and mother-to-child transmission stood at 9.3%.</p>`
+          );
+          return;
+        }
+
+        // 5. Vision, Mission, Core Values & Strategic Objectives
+        if (q.includes('vision') || q.includes('mission') || q.includes('value') || q.includes('strategic') || q.includes('objective') || q.includes('goal')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Vision, Mission &amp; Strategic Objectives (2026–2031)</p>
+             <p><strong>Vision (Proposed):</strong> Healthy mothers, children and communities in Kenya and the region, served by health systems that are evidence-driven, technology-enabled and equitable.</p>
+             <p><strong>Mission (Proposed):</strong> To generate locally relevant evidence, adapt and scale accessible health innovations, and build a skilled health workforce in partnership with communities, providers, policymakers, and global collaborators.</p>
+             <p><strong>Core Values:</strong> Equity, Scientific Integrity, Ethics &amp; Respect, Partnership, Local Ownership, Sustainability, and Innovation.</p>
+             <p><strong>6 Strategic Objectives:</strong> (SO1) Generate policy-relevant evidence; (SO2) Evaluate &amp; scale innovations; (SO3) Strengthen the health workforce; (SO4) Inform policy &amp; practice; (SO5) Build durable partnerships; (SO6) Ensure institutional sustainability.</p>`
+          );
+          return;
+        }
+
+        // 6. Specific Project 1: MedMissions / POCUS
+        if (q.includes('medmission') || (q.includes('pocus') && !q.includes('track'))) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Project 1: Point-of-Care Ultrasound (POCUS)</p>
+             <p><strong>Thematic Area:</strong> Maternal &amp; Newborn Health (MedMissions Initiative).</p>
+             <p><strong>Objectives:</strong> Train frontline clinicians and nurse-midwives in focused obstetric and clinical ultrasound; build diagnostic capacity in facilities without sonographers/radiologists; establish post-training mentorship and quality assurance.</p>
+             <p><strong>Expected Impact:</strong> Earlier detection of placental problems, malpresentation, multiple pregnancy, and growth restriction, leading to timely referrals.</p>`
+          );
+          return;
+        }
+
+        // 7. Specific Project 2: Pre-eclampsia / AI Obstetric Ultrasound
+        if (q.includes('eclampsia') || q.includes('obstetric')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Project 2: AI-Assisted Obstetric Ultrasound</p>
+             <p><strong>Thematic Area:</strong> AI &amp; Digital Health (Nairobi Study).</p>
+             <p><strong>Objectives:</strong> Assess how well AI-enabled ultrasound identifies women at risk of pre-eclampsia; examine feasibility and acceptability for providers and patients in Nairobi facilities; generate evidence on extending specialist-level screening to non-specialists.</p>`
+          );
+          return;
+        }
+
+        // 8. Specific Project 3: BRIGHT Grant / HIV / Trauma Counselling / Kiambu
+        if (q.includes('bright') || q.includes('hiv') || q.includes('trauma') || q.includes('kiambu') || q.includes('youth') || q.includes('counselling') || q.includes('mental')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Project 3: Trauma Counselling for Youth Living with HIV</p>
+             <p><strong>Thematic Area:</strong> Infectious Diseases (BRIGHT Grant Pilot, Kiambu County).</p>
+             <p><strong>Objectives:</strong> Test the feasibility and acceptability of a brief trauma-focused psychological intervention for young people living with HIV; explore effects on mental health and HIV care adherence; lay groundwork for a larger trial and routine integration.</p>`
+          );
+          return;
+        }
+
+        // 9. All Current Projects Overview
+        if (q.includes('project') || q.includes('portfolio')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Current Project Portfolio</p>
+             <p><strong>1. Point-of-Care Ultrasound (MNCH):</strong> MedMissions initiative training frontline clinicians &amp; midwives in focused ultrasound in low-resource settings.</p>
+             <p><strong>2. AI-Assisted Obstetric Ultrasound (AI &amp; Digital Health):</strong> Nairobi study evaluating AI-enabled ultrasound for early screening and diagnosis of pre-eclampsia.</p>
+             <p><strong>3. Trauma Counselling for Youth Living with HIV (Infectious Diseases):</strong> BRIGHT Grant pilot in Kiambu County testing a brief psychological intervention to improve mental health and ART adherence.</p>`
+          );
+          return;
+        }
+
+        // 10. Training Tracks & Capacity Building (Section 10)
+        if (q.includes('train') || q.includes('track') || q.includes('course') || q.includes('cpd') || q.includes('workshop') || q.includes('mentor') || q.includes('capacity')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Training &amp; Capacity Building (4 Tracks)</p>
+             <p><strong>• Track A (POCUS):</strong> For nurses, midwives, clinical &amp; medical officers. Covers fetal viability, gestational age, placental location, presentation, multiple pregnancy, and FAST scanning via hands-on workshops &amp; tele-mentorship.</p>
+             <p><strong>• Track B (AI &amp; Digital Health):</strong> Short courses on AI fundamentals, tool evaluation, data protection, and responsible clinical AI.</p>
+             <p><strong>• Track C (Research Methods &amp; Mentorship):</strong> Study design, implementation science, biostatistics, ethics, and grant writing for early-career researchers &amp; students.</p>
+             <p><strong>• Track D (Health Workforce Strengthening):</strong> Co-designed county workshops on MNCH emergency readiness, NCD screening, and psychosocial support.</p>
+             <p class="text-[11px] text-stone-600">Includes competency logbooks, CPD accreditation pursuit, train-the-trainer cascades, and 3-, 6-, and 12-month skills retention tracking.</p>`
+          );
+          return;
+        }
+
+        // 11. Core Pillars & Thematic Research Areas (Section 7)
+        if (q.includes('pillar') || q.includes('thematic') || q.includes('area') || q.includes('research') || q.includes('ncd') || q.includes('noncommunicable') || q.includes('innovation')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Core Pillars &amp; Thematic Areas</p>
+             <p><strong>Pillar I — Research (4 Thematic Areas):</strong><br/>1. <em>Noncommunicable diseases</em> (hypertension, diabetes, NCDs in pregnancy)<br/>2. <em>Maternal, newborn &amp; child health</em> (pre-eclampsia, antenatal POCUS, newborn outcomes)<br/>3. <em>Infectious diseases</em> (youth HIV mental health/adherence, PMTCT, integrated HIV/TB/NCD care)<br/>4. <em>AI &amp; digital health</em> (AI ultrasound validation, decision support, responsible AI)</p>
+             <p><strong>Pillar II — Innovation:</strong> POCUS, AI-assisted diagnostics, and context-appropriate digital tools moving through a 5-stage pathway (needs assessment → workflow adaptation → feasibility/accuracy testing → scale implementation → policy adoption).</p>
+             <p><strong>Pillar III — Training &amp; Capacity Building:</strong> 4 structured tracks equipping frontline workers and researchers.</p>`
+          );
+          return;
+        }
+
+        // 12. Ethics, NACOSTI & Data Governance (Section 12)
+        if (q.includes('ethic') || q.includes('nacosti') || q.includes('data') || q.includes('privacy') || q.includes('consent') || q.includes('protection')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Research Ethics &amp; Data Governance</p>
+             <p><strong>• Ethical Approval:</strong> Accredited Kenyan IRB approval and <strong>NACOSTI</strong> research licensing prior to study launch.</p>
+             <p><strong>• Data Protection:</strong> Strict compliance with <strong>Kenya's Data Protection Act (2019)</strong>, including de-identification, encryption, role-based access, and Kenyan data sovereignty.</p>
+             <p><strong>• Responsible AI &amp; Safeguarding:</strong> Local population validation, bias monitoring, human-in-the-loop clinical oversight, adolescent assent/consent safeguards, and distress referral pathways.</p>`
+          );
+          return;
+        }
+
+        // 13. Roadmap (2026-2031), M&E Targets & Sustainability (Sections 13-15)
+        if (q.includes('roadmap') || q.includes('target') || q.includes('milestone') || q.includes('2026') || q.includes('2031') || q.includes('sustain') || q.includes('funding') || q.includes('impact')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">2026–2031 Roadmap &amp; 5-Year Targets</p>
+             <p><strong>• Phase 1 — Establish (Year 1, 2026–27):</strong> Formalise governance, complete current pilots, launch first POCUS training cohorts.</p>
+             <p><strong>• Phase 2 — Consolidate (Years 2–3, 2027–29):</strong> Expand to more counties, accredit POCUS CPD course, publish findings, grow NCD portfolio.</p>
+             <p><strong>• Phase 3 — Scale (Years 4–5, 2029–31):</strong> National MoH/county policy adoption and regional training hub.</p>
+             <p><strong>Proposed 5-Year M&amp;E Targets:</strong> 500+ health workers trained in POCUS (≥80% 12-month skill retention), 100+ researchers mentored, 50+ facilities using Center innovations, 25+ peer-reviewed publications, 15+ formal partnerships, and 10+ policy briefs.</p>`
+          );
+          return;
+        }
+
+        // 14. About the Center / General Overview
+        if (q.includes('about') || q.includes('who are you') || q.includes('center') || q.includes('cgh') || q.includes('distinctive')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">About CGH-KU</p>
+             <p>The <strong>Center for Global Health at Kenyatta University (CGH-KU)</strong> in Nairobi, Kenya is a hub for collaborative health research, clinical innovation, and workforce training co-led by <strong>Dr. Titus Kahiga, PhD</strong> and <strong>Alphonce Oyugi</strong>.</p>
+             <p><strong>What makes us distinctive:</strong> We unite evidence generation, context-fit technology (handheld POCUS &amp; AI), whole-person physical/mental health, and university/KUTRRH anchoring under one roof.</p>`
+          );
+          return;
+        }
+
+        // 15. Contact Information
+        if (q.includes('contact') || q.includes('email') || q.includes('reach') || q.includes('location') || q.includes('where') || q.includes('website')) {
+          appendMessage(
+            'bot',
+            `<p class="font-bold text-kuGreen">Contact &amp; Engagement</p>
+             <p><strong>Co-Directors:</strong> Dr. Titus Kahiga, PhD &amp; Alphonce Oyugi</p>
+             <p><strong>Location:</strong> Kenyatta University, Kahawa, Nairobi, Kenya</p>
+             <p><strong>Email:</strong> <a href="mailto:${CENTER_EMAIL}" class="underline text-kuGreen font-semibold">${CENTER_EMAIL}</a></p>
+             <p><strong>Collaboration Form:</strong> <a href="${GOOGLE_FORM_URL}" target="_blank" rel="noopener noreferrer" class="underline text-kuAmber font-semibold">Register Interest ↗</a></p>`
+          );
+          return;
+        }
+
+        // Fallback Menu with comprehensive prompts
+        appendMessage(
+          'bot',
+          `<p>I have the complete <strong>CGH-KU Concept Report</strong> loaded! You can ask me about:</p>
+           <p>• <strong>Leadership &amp; Governance</strong> (Co-Directors Dr. Titus Kahiga &amp; Alphonce Oyugi)<br/>• <strong>Core Pillars &amp; Projects</strong> (MedMissions POCUS, AI Pre-eclampsia study, BRIGHT HIV pilot)<br/>• <strong>Training Tracks (A–D)</strong> &amp; <strong>KUTRRH Context</strong><br/>• <strong>Kenya Health Rationale</strong> (MMR 355, NCDs 61.7%, Youth HIV)<br/>• <strong>2026–2031 Roadmap, Ethics &amp; Collaboration Form</strong></p>`
+        );
+      }
+
+      // Initial Welcome Message
+      appendMessage(
+        'bot',
+        `<p class="font-bold text-kuGreen">Welcome to the Center for Global Health at Kenyatta University (CGH-KU)!</p>
+         <p>I can answer questions about our Co-Directors (<strong>Dr. Titus Kahiga</strong> &amp; <strong>Alphonce Oyugi</strong>), research pillars, POCUS &amp; AI projects, training tracks, 2026–2031 roadmap, or help you register for collaboration.</p>`
+      );
+
+      // Toggle Open / Close
+      toggleBtn.addEventListener('click', () => {
+        panel.classList.toggle('hidden');
+        panel.classList.toggle('flex');
+        if (!panel.classList.contains('hidden')) {
+          input.focus();
+        }
+      });
+
+      closeBtn.addEventListener('click', () => {
+        panel.classList.add('hidden');
+        panel.classList.remove('flex');
+      });
+
+      // Handle Form Submit
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        appendMessage('user', text);
+        input.value = '';
+        setTimeout(() => getBotResponse(text), 200);
+      });
+
+      // Handle Starter Chips
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const topic = chip.getAttribute('data-topic');
+          const label = chip.textContent.trim();
+          collabStep = 0; // Reset form flow if a chip is clicked
+          appendMessage('user', label);
+          setTimeout(() => getBotResponse(topic), 180);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
