@@ -484,16 +484,5 @@
       </div>
     </div>
   </footer>
-
-  <!-- Botpress Webchat Integration -->
-  <link rel="stylesheet" href="https://vdk-viber-runtime-prod.bot.botpress.host/edge/webchat.css" />
-  <script src="https://vdk-viber-runtime-prod.bot.botpress.host/edge/webchat.js"></script>
-  <script>
-    fetch("https://vdk-viber-runtime-prod.bot.botpress.host/edge/bots/362a4fce-c3e5-4d18-bd46-c6ec29befa46/config")
-      .then((res) => res.json())
-      .then(({ webchat }) =>
-        VdkEdgeWebchat.mount({ ...webchat, mode: "bubble", baseUrl: "https://vdk-viber-runtime-prod.bot.botpress.host", botId: "362a4fce-c3e5-4d18-bd46-c6ec29befa46" })
-      )
-  </script>
 </body>
 </html>
