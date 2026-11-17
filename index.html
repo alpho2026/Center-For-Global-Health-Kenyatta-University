@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://vdk-viber-runtime-prod.bot.botpress.host/edge/webchat.css" />
 
   <script>
     tailwind.config = {
@@ -75,36 +74,6 @@
     .kenya-pulse {
       transform-origin: 70px 68px;
       animation: pulseGlow 3.5s ease-in-out infinite;
-    }
-
-    /* Compact Botpress Widget Overrides to prevent large screen overlap */
-    :root {
-      --bp-webchat-width: 320px !important;
-      --bp-webchat-height: 430px !important;
-    }
-
-    div[class*="vdk-"],
-    div[id*="botpress"],
-    div[id*="bp-web-widget"],
-    .bpw-layout,
-    iframe[title*="chat" i],
-    iframe[title*="botpress" i] {
-      max-width: 330px !important;
-      max-height: 440px !important;
-    }
-
-    /* Scale down fixed bottom-right Botpress container neatly */
-    body > div:last-of-type {
-      transform: scale(0.84);
-      transform-origin: bottom right;
-      z-index: 50;
-    }
-
-    @media (max-width: 640px) {
-      body > div:last-of-type {
-        transform: scale(0.78);
-        transform-origin: bottom right;
-      }
     }
   </style>
 </head>
@@ -516,42 +485,15 @@
     </div>
   </footer>
 
-  <!-- Botpress Webchat Integration (Compact Sizing) -->
+  <!-- Botpress Webchat Integration -->
+  <link rel="stylesheet" href="https://vdk-viber-runtime-prod.bot.botpress.host/edge/webchat.css" />
   <script src="https://vdk-viber-runtime-prod.bot.botpress.host/edge/webchat.js"></script>
   <script>
     fetch("https://vdk-viber-runtime-prod.bot.botpress.host/edge/bots/362a4fce-c3e5-4d18-bd46-c6ec29befa46/config")
       .then((res) => res.json())
-      .then(({ webchat }) => {
-        VdkEdgeWebchat.mount({
-          ...webchat,
-          mode: "bubble",
-          baseUrl: "https://vdk-viber-runtime-prod.bot.botpress.host",
-          botId: "362a4fce-c3e5-4d18-bd46-c6ec29befa46"
-        });
-
-        // Inject compact dimensions into Botpress Shadow DOM if present
-        const shrinkWidget = () => {
-          document.querySelectorAll('*').forEach((el) => {
-            if (el.shadowRoot && !el.shadowRoot.getElementById('ku-compact-chat')) {
-              const style = document.createElement('style');
-              style.id = 'ku-compact-chat';
-              style.textContent = `
-                :host {
-                  transform: scale(0.84);
-                  transform-origin: bottom right;
-                }
-                div[role="dialog"], .bpw-layout, .vdk-chat-window, [class*="window" i], [class*="panel" i], [class*="container" i] {
-                  max-height: 430px !important;
-                  max-width: 320px !important;
-                }
-              `;
-              el.shadowRoot.appendChild(style);
-            }
-          });
-        };
-        setTimeout(shrinkWidget, 400);
-        setTimeout(shrinkWidget, 1500);
-      });
+      .then(({ webchat }) =>
+        VdkEdgeWebchat.mount({ ...webchat, mode: "bubble", baseUrl: "https://vdk-viber-runtime-prod.bot.botpress.host", botId: "362a4fce-c3e5-4d18-bd46-c6ec29befa46" })
+      )
   </script>
 </body>
 </html>
